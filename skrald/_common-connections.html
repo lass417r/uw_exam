@@ -1,0 +1,76 @@
+<template mix-target="#info">
+  <section id="crime-info-common-container" class="space-y-4">
+    % if not result:
+    <p>No connections found.</p>
+    % else:
+    % for connection in result:
+    <article class="crime_info bg-gray-900 text-white p-4 rounded-lg shadow-md">
+      <header class="mb-5">
+        <h3 class="text-xl font-bold mb-2 text-white">Crime ID: {{connection['crime']['_key']}}</h3>
+        <p class="text-sm font-light text-blue-400"><strong>Address:</strong> {{connection['crime']['address']}}</p>
+        <p class="text-sm font-light text-blue-400"><strong>Crime Type:</strong> {{connection['crime']['crime_type']}}</p>
+        <p class="text-sm font-light text-blue-400"><strong>Crime Severity:</strong> {{connection['crime']['crime_severity']}}</p>
+        <p class="text-sm font-light text-blue-400"><strong>Report Date:</strong> {{connection['crime']['report_date']}}</p>
+      </header>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        % if connection['relationship'] == "suspect-suspect":
+        <div>
+          <h4 class="text-lg font-bold mb-2 text-blue-400">Suspect 1</h4>
+          <p><strong>Full Name:</strong> {{connection['suspect1']['first_name']}} {{connection['suspect1']['last_name']}}</p>
+          <p><strong>Address:</strong> {{connection['suspect1']['address']}}</p>
+          <p><strong>Age:</strong> {{connection['suspect1']['age']}}</p>
+          <p><strong>Gender:</strong> {{connection['suspect1']['gender']}}</p>
+        </div>
+        <div>
+          <h4 class="text-lg font-bold mb-2 text-blue-400">Suspect 2</h4>
+          <p><strong>Full Name:</strong> {{connection['suspect2']['first_name']}} {{connection['suspect2']['last_name']}}</p>
+          <p><strong>Address:</strong> {{connection['suspect2']['address']}}</p>
+          <p><strong>Age:</strong> {{connection['suspect2']['age']}}</p>
+          <p><strong>Gender:</strong> {{connection['suspect2']['gender']}}</p>
+        </div>
+        % elif connection['relationship'] == "suspect-witness":
+        <div>
+          <h4 class="text-lg font-bold mb-2 text-blue-400">Suspect</h4>
+          <p><strong>Full Name:</strong> {{connection['suspect']['first_name']}} {{connection['suspect']['last_name']}}</p>
+          <p><strong>Address:</strong> {{connection['suspect']['address']}}</p>
+          <p><strong>Age:</strong> {{connection['suspect']['age']}}</p>
+          <p><strong>Gender:</strong> {{connection['suspect']['gender']}}</p>
+        </div>
+        <div>
+          <h4 class="text-lg font-bold mb-2 text-blue-400">Witness</h4>
+          <p><strong>Full Name:</strong> {{connection['witness']['first_name']}} {{connection['witness']['last_name']}}</p>
+          <p><strong>Address:</strong> {{connection['witness']['address']}}</p>
+          <p><strong>Age:</strong> {{connection['witness']['age']}}</p>
+          <p><strong>Gender:</strong> {{connection['witness']['gender']}}</p>
+        </div>
+        % end
+      </div>
+      <section class="mb-4 pt-4 border-t border-gray-700">
+        <h4 class="text-lg font-bold mb-2 text-blue-400">Common Friends</h4>
+        <div class="grid grid-cols-2 gap-4">
+          % for friend in connection['common_friends']:
+          <div class="p-2 my-2 rounded-md mb-2 bg-gray-700">
+            <p><strong>Friend CPR:</strong> {{friend}}</p>
+          </div>
+          % end
+        </div>
+      </section>
+      <section class="mb-4 pt-4 border-t border-gray-700">
+        <h4 class="text-lg font-bold mb-2 text-blue-400">Common Crimes</h4>
+        <div class="grid grid-cols-2 gap-4">
+          % for common_crime in connection['common_crimes']:
+          <div class="p-2 my-2 rounded-md mb-2 bg-gray-700">
+            <p><strong>Crime ID:</strong> {{common_crime['_key']}}</p>
+            <p><strong>Address:</strong> {{common_crime['address']}}</p>
+            <p><strong>Crime Type:</strong> {{common_crime['crime_type']}}</p>
+            <p><strong>Crime Severity:</strong> {{common_crime['crime_severity']}}</p>
+            <p><strong>Report Date:</strong> {{common_crime['report_date']}}</p>
+          </div>
+          % end
+        </div>
+      </section>
+    </article>
+    % end
+    % end
+  </section>
+</template>

@@ -1,0 +1,78 @@
+<!-- ### ÆNDRET AF LASSE TORS. 9 MAJ ### -->
+<template mix-target="#info" mix-push-url="/crimelist">
+  <section id="crime-info-container" class="space-y-4">
+    <div>
+      % if show_all:
+      <h2 id="headline" class="font-bold text-lg">Displaying: All Crimes</h2>
+      % elif crime_type != 'all' and crime_severity != 'all':
+      <h2 id="headline" class="font-bold text-lg">Displaying: {{crime_type}} - {{crime_severity}}</h2>
+      % elif crime_type != 'all':
+      <h2 id="headline" class="font-bold text-lg">Displaying: {{crime_type}}</h2>
+      % elif crime_severity != 'all':
+      <h2 id="headline" class="font-bold text-lg">Displaying: {{crime_severity}}</h2>
+      % else:
+      <h2 id="headline" class="font-bold text-lg">No crimes of this type and/or severity.</h2>
+      % end
+    </div>
+
+    % for crime in crimes:
+    <article class="crime_info bg-gray-900 text-white p-4 rounded-lg shadow-md" id="crime-{{crime['crime']['_key']}}">
+      <header>
+        <h3 class="text-lg font-bold mb-2 text-blue-400">Crime Details</h3>
+      </header>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <p><strong>Crime ID:</strong> {{crime['crime']["_key"]}}</p>
+        <p><strong>Address:</strong> {{crime['crime']["address"]}}</p>
+        <p><strong>Crime Type:</strong> {{crime['crime']["crime_type"]}}</p>
+        <p><strong>Report date:</strong> {{crime['crime']["report_date"]}}</p>
+        <p><strong>Crime severity:</strong> {{crime['crime']["crime_severity"]}}</p>
+      </div>
+      <section class="mb-4 pt-4 border-t border-gray-700">
+        <button id="toggle-suspects-{{crime['crime']['_key']}}" class="toggle-button font-semibold transition duration-150 text-yellow-500 mb-2 flex justify-between items-center w-full" onclick="toggleContent('suspects-{{crime['crime']['_key']}}', 'toggle-suspects-{{crime['crime']['_key']}}')">
+          <span>Suspects:</span> <span class="arrow arrow-down">&#9660;</span>
+        </button>
+
+        <div id="suspects-{{crime['crime']['_key']}}" class="grid grid-cols-2 gap-4 hidden transition duration-150">
+          % for suspect in crime["suspects"]:
+          <div class="p-3 bg-gray-800 rounded-md mb-2 grid grid-cols-5">
+            <div class="relative col-start-5 col-end-6">
+            <button class="fas fa-user absolute z-10 text-3xl top-0 right-0 mt-4 mr-4 font-bold my-2 transition duration-150 hover:text-yellow-600" mix-get="/get_crimes_cpr/{{suspect['_key']}}"></button>
+            </div>
+            <div class="col-start-1 col-end-5">
+              <p><strong>First Name:</strong> {{suspect["first_name"]}}</p>
+              <p><strong>Last Name:</strong> {{suspect["last_name"]}}</p>
+              <p><strong>Age:</strong> {{suspect["age"]}}</p>
+              <p><strong>CPR:</strong> {{suspect["_key"]}}</p>
+              <p><strong>Gender:</strong> {{suspect["gender"]}}</p>
+              <p><strong>Address:</strong> {{suspect["address"]}}</p>
+            </div>
+          </div>
+          % end
+        </div>
+      </section>
+      <section class="pt-4 border-t border-gray-700">
+        <button id="toggle-witnesses-{{crime['crime']['_key']}}" class="toggle-button font-semibold transition duration-150 text-yellow-500 mb-2 flex justify-between items-center w-full" onclick="toggleContent('witnesses-{{crime['crime']['_key']}}', 'toggle-witnesses-{{crime['crime']['_key']}}')">
+          <span>Witnesses:</span> <span class="arrow arrow-down">&#9660;</span>
+        </button>
+        <div id="witnesses-{{crime['crime']['_key']}}" class="grid grid-cols-2 gap-4 hidden transition duration-150">
+          % for witness in crime["witnesses"]:
+            <div class="p-3 bg-gray-800 rounded-md mb-2 grid grid-cols-5">
+              <div class="relative col-start-5 col-end-6">
+               <button class="fas fa-user absolute z-10 text-3xl top-0 right-0 mt-4 mr-4 font-bold my-2 transition duration-150 hover:text-yellow-600" mix-get="/get_crimes_cpr/{{witness['_key']}}"></button>
+              </div>
+              <div class="col-start-1 col-end-5">
+                <p><strong>First Name:</strong> {{witness["first_name"]}}</p>
+                <p><strong>Last Name:</strong> {{witness["last_name"]}}</p>
+                <p><strong>Age:</strong> {{witness["age"]}}</p>
+                <p><strong>CPR:</strong> {{witness["_key"]}}</p>
+                <p><strong>Gender:</strong> {{witness["gender"]}}</p>
+                <p><strong>Address:</strong> {{witness["address"]}}</p>
+              </div>
+            </div>
+          % end
+        </div>
+      </section>
+    </article>
+    % end
+  </section>
+</template>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="/mixhtml.js" defer></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="/app.css" />
+  <title>Crime Dashboard</title>
+</head>
+<body class="bg-gray-800 text-white font-sans">
+  <div id="container" class="w-full h-full grid grid-cols-2">
+    <!-- Left side: Map Display -->
+    <div id="map" class="w-full h-full"><!-- MAP  --></div>
+    <!-- Right side: Control and Info Display -->
+    <div class="flex flex-col h-screen">
+      <div class="flex justify-between p-4 bg-gray-900 border-b-gray-400">
+        <button id="refreshButton" mix-get="/filtered-crimes?type=all&severity=all" class="fas fa-home text-2xl transition duration-150 items-center font-bold hover:text-yellow-600 appearance-none px-4 py-2 bg-gray-700 border border-gray-600 rounded leading-tight focus:outline-none">
+        </button>
+        <!-- <button mix-get="/get_common_connections" class="fas fa-users text-2xl transition duration-150 items-center font-bold hover:text-yellow-600 appearance-none px-4 py-2 bg-gray-700 border border-gray-600 rounded leading-tight focus:outline-none"></button> -->
+        <div class="flex gap-4">
+          <select id="crimeFilter" class="form-select appearance-none px-4 py-2 font-bold cursor-pointer bg-gray-700 border border-gray-600 hover:text-yellow-600 rounded leading-tight focus:outline-none focus:border-blue-500 transition duration-150" aria-label="Crime filter">
+            <option value="all">Show All Types</option>
+            <option value="Theft">Theft</option>
+            <option value="Assault">Assault</option>
+            <option value="Vandalism">Vandalism</option>
+            <option value="Drug Offense">Drug Offense</option>
+            <option value="Fraud">Fraud</option>
+            <option value="Cybercrime">Cybercrime</option>
+            <option value="Arson">Arson</option>
+            <option value="Robbery">Robbery</option>
+          </select>
+          <select id="severityFilter" class="form-select appearance-none px-4 py-2 font-bold cursor-pointer bg-gray-700 border border-gray-600 hover:text-yellow-600 rounded leading-tight focus:outline-none focus:border-blue-500 transition duration-150" aria-label="Crime filter">
+            <option value="all">Show All Severities</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+          <button id="filterButton" mix-get="/filtered-crimes?type=all&severity=all" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">Filter Crimes</button>
+        </div>
+        <button mix-get="/update-crimes" mix-default="Get Latest Crimes" mix-await="Loading..." class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">Get Latest Crimes</button>
+      </div>
+      <div id="info" class="flex-grow overflow-y-scroll bg-gray-700 p-4">
+        <!-- Benytter Bottle template for at kunne indlejre template -->
+        % include('_crimes-list-non-template.html', show_all="all")
+      </div>
+    </div>
+  </div>
+  <script>
+    const mix_replace_url = "/"
+  </script>
+  <script src="/app.js"></script>
+  <style>
+    .arrow {
+      display: inline-block;
+      margin-right: 5px;
+      transition: transform 0.2s ease;
+    }
+    
+    .arrow-up {
+      transform: rotate(180deg);
+    }
+    
+    .arrow-down {
+      transform: rotate(0deg);
+    }
+  </style>
+</body>
+</html>

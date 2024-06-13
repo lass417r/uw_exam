@@ -1,0 +1,80 @@
+<template mix-target="#info" mix-push-url="/crimes/${crime.id}">
+  <article id="crime_info" class="bg-gray-900 text-white p-4 rounded-lg shadow-lg max-w-4xl mx-auto my-4">
+    <header class="border-b border-gray-700 pb-4 mb-4">
+      <h2 class="text-xl font-bold text-blue-400">Crime Details</h2>
+    </header>
+    <section class="grid grid-cols-2 gap-4 text-gray-300 mb-6">
+      <p><strong>Address:</strong> {{crime['crime']["address"]}}</p>
+      <p><strong>Crime Type:</strong> {{crime['crime']["crime_type"]}}</p>
+      <p><strong>Crime severity:</strong> {{crime['crime']["crime_severity"]}}</p>
+      <p><strong>Crime ID:</strong> {{crime['crime']["_key"]}}</p>
+      <p><strong>Report date:</strong> {{crime['crime']["report_date"]}}</p>
+    </section>
+    <section class="mb-4 pt-4 border-t border-gray-700">
+      <h3 class="font-semibold text-yellow-500 mb-2">Suspects:</h3>
+      <div id="suspects-{{crime['crime']['_key']}}" class="grid grid-cols-2 gap-4">
+        % for suspect in crime["suspects"]:
+        <div class="p-2 my-2 rounded-md mb-2 bg-gray-700">
+          <div class="grid grid-cols-5 ">
+            <div class="relative col-start-5 col-end-6">
+              <button class="fas fa-user absolute z-10 text-3xl top-0 right-0 mt-4 mr-4 font-bold my-2 transition duration-150 hover:text-yellow-600" mix-get="/get_crimes_cpr/{{suspect['suspect']['_key']}}"></button>
+            </div>
+            <div class="col-start-1 col-end-5">
+              <p><strong>First Name:</strong> {{suspect["suspect"]["first_name"]}}</p>
+              <p><strong>Last Name:</strong> {{suspect["suspect"]["last_name"]}}</p>
+              <p><strong>Age:</strong> {{suspect["suspect"]["age"]}}</p>
+              <p><strong>CPR:</strong> {{suspect["suspect"]["_key"]}}</p>
+              <p><strong>Gender:</strong> {{suspect["suspect"]["gender"]}}</p>
+              <p><strong>Address:</strong> {{suspect["suspect"]["address"]}}</p>
+            </div>
+          </div>
+          <div class="pt-4">
+            <button id="toggle-friends-{{suspect['suspect']['_key']}}" class="toggle-button font-semibold transition duration-150 text-yellow-500 mb-2 flex justify-between items-center w-full" onclick="toggleContent('friends-{{suspect['suspect']['_key']}}', 'toggle-friends-{{suspect['suspect']['_key']}}')">
+              <span>Friends:</span> <span class="arrow arrow-down">&#9660;</span>
+            </button>
+            <div id="friends-{{suspect['suspect']['_key']}}" class="gap-4 hidden transition duration-150">
+              % for friend in suspect["friends"]:
+                <div class="p-2 my-2 rounded-md mb-2 odd:bg-gray-900 even:bg-gray-800">
+                  <p><strong>Full Name:</strong> {{friend["first_name"]}} {{friend["last_name"]}}</p>
+                  <p><strong>Address:</strong> {{friend["address"]}}</p>
+                  <p><strong>CPR:</strong> {{friend["_key"]}}</p>
+                  <p><strong>Age:</strong> {{friend["age"]}}</p>
+                </div>
+              % end
+            </div>
+          </div>
+        </div>
+        % end
+      </div>
+    </section>
+    <section class="pt-4 border-t border-gray-700">
+      <h3 class="font-semibold text-yellow-500 mb-2">Witnesses:</h3>
+      <div id="witnesses-{{crime['crime']['_key']}}" class="grid grid-cols-2 gap-4">
+        % for witness in crime["witnesses"]:
+        <div class="p-3 bg-gray-800 rounded-md mb-2 h-auto">
+          <p><strong>First Name:</strong> {{witness["witness"]["first_name"]}}</p>
+          <p><strong>Last Name:</strong> {{witness["witness"]["last_name"]}}</p>
+          <p><strong>Age:</strong> {{witness["witness"]["age"]}}</p>
+          <p><strong>CPR:</strong> {{witness["witness"]["_key"]}}</p>
+          <p><strong>Gender:</strong> {{witness["witness"]["gender"]}}</p>
+          <p><strong>Address:</strong> {{witness["witness"]["address"]}}</p>
+          <div class="pt-4">
+            <button id="toggle-friends-{{witness['witness']['_key']}}" class="toggle-button transition duration-150 font-semibold text-yellow-500 mb-2 flex justify-between items-center w-full" onclick="toggleContent('friends-{{witness['witness']['_key']}}', 'toggle-friends-{{witness['witness']['_key']}}')">
+              <span>Friends:</span> <span class="arrow arrow-down">&#9660;</span>
+            </button>
+            <div id="friends-{{witness['witness']['_key']}}" class=" hidden transition duration-150">
+            % for friend in witness["friends"]:
+            <div class="p-2 my-2 rounded-md mb-2 odd:bg-gray-700 even:bg-gray-800">
+              <p><strong>Full Name:</strong> {{friend["first_name"]}} {{friend["last_name"]}}</p>
+              <p><strong>Address:</strong> {{friend["address"]}}</p>
+              <p><strong>CPR:</strong> {{friend["_key"]}}</p>
+              <p><strong>Age:</strong> {{friend["age"]}}</p></div>
+              % end
+            </div>
+          </div>
+        </div>
+        % end
+      </div>
+    </section>
+  </article>
+</template>

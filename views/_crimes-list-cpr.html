@@ -1,0 +1,98 @@
+<template mix-target="#info" mix_replace_url='/{{result[0]["person"]["_key"]}}'>
+  <section id="crime-info-container" class="space-y-4">
+    % for person_entry in result:
+    <article class="person_info bg-gray-900 text-white p-4 rounded-lg shadow-md">
+      <header class="mb-5">
+        <h3 class="text-xl font-bold mb-2 text-white">{{person_entry['person']["first_name"]}} {{person_entry['person']["last_name"]}}</h3>
+        <p class="text-sm font-light text-blue-400"><strong>PROFILE ID:</strong> {{person_entry['person']["_key"]}}</p>
+      </header>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <p><strong>Gender</strong> {{person_entry['person']["gender"]}}</p>
+        <p><strong>Address:</strong> {{person_entry['person']["address"]}}</p>
+        <p><strong>Age:</strong> {{person_entry['person']["age"]}}</p>
+        <p><strong>CPR:</strong> {{person_entry['person']["_key"]}}</p>
+      </div>
+      <section class="mb-4 pt-4 border-t border-gray-700">
+        <button id="toggle-person-{{person_entry['person']['_key']}}" class="toggle-button font-semibold transition duration-150 text-yellow-500 mb-2 flex justify-between items-center w-full" onclick="toggleContent('person-{{person_entry['person']['_key']}}', 'toggle-person-{{person_entry['person']['_key']}}')">
+          <h3 class="text-base font-bold mb-2 text-blue-400">{{person_entry['person']["first_name"]}}'s friends</h3> <span class="arrow arrow-down">&#9660;</span>
+        </button>
+        <div id="person-{{person_entry['person']['_key']}}" class="grid grid-cols-2 gap-4 hidden transition duration-150">
+          % for friend in person_entry["friends"]:
+            <div class="p-2 m-2 rounded-md bg-gray-700 grid grid-cols-5 ">
+              <div class="relative col-start-5 col-end-6">
+                <button class="fas fa-user absolute z-10 text-3xl top-0 right-0 mt-4 mr-4 font-bold my-2 transition duration-150 hover:text-yellow-600" mix-get="/get_crimes_cpr/{{friend['_key']}}"></button>
+              </div>
+              <div class="col-start-1 col-end-5">
+                <p><strong>Full Name:</strong> {{friend["first_name"]}} {{friend["last_name"]}}</p>
+                <p><strong>Address:</strong> {{friend["address"]}}</p>
+                <p><strong>CPR:</strong> {{friend["_key"]}}</p>
+                <p><strong>Age:</strong> {{friend["age"]}}</p>
+              </div>
+            </div>
+          % end
+        </div>
+      </section>
+    </article>
+    <h2 class="text-2xl font-bold mb-2 mt-4 text-blue-400">Suspect in:</h2>
+    % for crime_entry in person_entry["crimes_committed"]:
+    <article class="crime_info bg-gray-900 text-white p-4 rounded-lg shadow-md" id="crime-{{crime_entry['crime']['_key']}}">
+      <header class="flex justify-between items-center my-4">
+        <h3 class="text-xl font-bold mb-2 text-blue-400">Crime Details</h3>
+        <button class="fas fa-arrow-right text-blue-400 text-3xl mr-4 font-bold transition duration-150 hover:text-yellow-600" mix-get="/crimes/{{crime_entry['crime']['_key']}}"></button>
+      </header>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <p><strong>Address:</strong> {{crime_entry['crime']["address"]}}</p>
+        <p><strong>Crime Type:</strong> {{crime_entry['crime']["crime_type"]}}</p>
+        <p><strong>Crime ID:</strong> {{crime_entry['crime']["_key"]}}</p>
+        <p><strong>Crime severity:</strong> {{crime_entry['crime']["crime_severity"]}}</p>
+        <p><strong>Report date:</strong> {{crime_entry['crime']["report_date"]}}</p>
+      </div>
+      <section class="mb-4 pt-4 border-t border-gray-700">
+        <button id="toggle-suspects-{{crime_entry['crime']['_key']}}" class="toggle-button font-semibold transition duration-150 text-yellow-500 mb-2 flex justify-between items-center w-full" onclick="toggleContent('suspects-{{crime_entry['crime']['_key']}}', 'toggle-suspects-{{crime_entry['crime']['_key']}}')">
+          <span>Suspects:</span> <span class="arrow arrow-down">&#9660;</span>
+        </button>
+        <div id="suspects-{{crime_entry['crime']['_key']}}" class="grid grid-cols-2 gap-4 hidden transition duration-150">
+          % for suspect_entry in crime_entry["suspects"]:
+          <div class="p-2 my-2 rounded-md mb-2 odd:bg-gray-700 even:bg-gray-800 grid grid-cols-5 ">
+            <div class="relative col-start-5 col-end-6">
+              <button class="fas fa-user absolute z-10 text-3xl top-0 right-0 mt-4 mr-4 font-bold my-2 transition duration-150 hover:text-yellow-600" mix-get="/get_crimes_cpr/{{suspect_entry['suspect']['_key']}}"></button>
+            </div>
+            <div class="col-start-1 col-end-5">
+              <p><strong>First Name:</strong> {{suspect_entry["suspect"]["first_name"]}}</p>
+              <p><strong>Last Name:</strong> {{suspect_entry["suspect"]["last_name"]}}</p>
+              <p><strong>Age:</strong> {{suspect_entry["suspect"]["age"]}}</p>
+              <p><strong>CPR:</strong> {{suspect_entry["suspect"]["_key"]}}</p>
+              <p><strong>Gender:</strong> {{suspect_entry["suspect"]["gender"]}}</p>
+              <p><strong>Address:</strong> {{suspect_entry["suspect"]["address"]}}</p>
+            </div>
+          </div>
+          % end
+        </div>
+      </section>
+      <section class="pt-4 border-t border-gray-700">
+        <button id="toggle-witnesses-{{crime_entry['crime']['_key']}}" class="toggle-button font-semibold text-yellow-500 mb-2 flex justify-between items-center w-full" onclick="toggleContent('witnesses-{{crime_entry['crime']['_key']}}', 'toggle-witnesses-{{crime_entry['crime']['_key']}}')">
+          <span>Witnesses:</span> <span class="arrow arrow-down">&#9660;</span>
+        </button>
+        <div id="witnesses-{{crime_entry['crime']['_key']}}" class="grid grid-cols-2 gap-4 hidden">
+          % for witness_entry in crime_entry["witnesses"]:
+          <div class="p-2 my-2 rounded-md mb-2 odd:bg-gray-700 even:bg-gray-800 grid grid-cols-5 ">
+            <div class="relative col-start-5 col-end-6">
+              <button class="fas fa-user absolute z-10 text-3xl top-0 right-0 mt-4 mr-4 font-bold my-2 hover:text-yellow-600" mix-get="/get_crimes_cpr/{{witness_entry['witness']['_key']}}"></button>
+            </div>
+            <div class="col-start-1 col-end-5">
+              <p><strong>First Name:</strong> {{witness_entry["witness"]["first_name"]}}</p>
+              <p><strong>Last Name:</strong> {{witness_entry["witness"]["last_name"]}}</p>
+              <p><strong>Age:</strong> {{witness_entry["witness"]["age"]}}</p>
+              <p><strong>CPR:</strong> {{witness_entry["witness"]["_key"]}}</p>
+              <p><strong>Gender:</strong> {{witness_entry["witness"]["gender"]}}</p>
+              <p><strong>Address:</strong> {{witness_entry["witness"]["address"]}}</p>
+            </div>
+          </div>
+          % end
+        </div>
+      </section>
+    </article>
+    % end
+    % end
+  </section>
+</template>
